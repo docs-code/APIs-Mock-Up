@@ -5,76 +5,151 @@ HOST: https://polls.apiblueprint.org/
 
 Polls is a simple API allowing consumers to view polls and vote in them.
 
-## Questions Collection [/questions]
 
-### List All Questions [GET]
-
-+ Response 200 (application/json)
-
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
-
-### Create a New Question [POST]
-
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+# Group Authentication
+## Authentication [/api/v1/login]
+### Login with Email or Facebook [POST]
 
 + Request (application/json)
 
+    + Headers
+    
+            platform: ios, android, website
+            app_version: 1.0
+            language: en, th
+            Accept: application/json
+
+    + Attributes
+        + username: email@example.com (string, required) - The email or username of the user
+        + password: secretpassw0rd (string, required) - The password of the user
+        + type: email (string, required) - ประเภทที่ login มาอาจเป็น email หรือ facebook
+
++ Response 200 (application/json)
+
         {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
+            "message": "Success, welcome to Apis Mock Up",
+            "usertoken": "usjjfsa7asdKsllcalld"
         }
 
-+ Response 201 (application/json)
++ Response 401 (application/json)
+
+        {
+            "message": "The provided authorization grant is invalid, expired, revoked, does not match the redirection URI used in the authorization request, or was issued to another client."
+        }
+
+## Account management [/api/v1/register]
+### Register with Email [POST]
++ Request (application/json)
 
     + Headers
+    
+            platform: ios, android, website
+            app_version: 1.0
+            language: en, th
+            Accept: application/json
 
-            Location: /questions/2
+    + Attributes
+        + firstname: John (string, required) - First Name of user
+        + lastname: Doe (string, required) - Last Name of user
+        + email: John@gmail.com (string, required) - The email or username of the user
+        + password: x789x23! (string, required) - The password of the user
+        + phonenumber: 0845200123 (string, required) - Phonenumber
 
-    + Body
++ Response 200 (application/json)
 
+        {
+            "message": "Success, welcome to Apis Mock Up",
+            "usertoken": "usjjfsa7asdKsllcalld"
+        }
+
++ Response 401 (application/json)
+
+        {
+            "message": "Register fail"
+        }
+        
+### Forget password [POST /api/v1/forget_password]
++ Request (application/json)
+
+    + Headers
+    
+            platform: ios, android, website
+            app_version: 1.0
+            language: en, th
+            Accept: application/json
+            Authorization: Bearer usjjfsa7asdKsllcalld
+
+    + Attributes
+        + email: sample@gmail.com (string, required) - The email or username of the user
+
++ Response 200 (application/json)
+
+        {
+            "message": "Success, Please check your email and reset password"
+        }
+
++ Response 401 (application/json)
+
+        {
+            "message": "Fail, Please try again"
+        }
+        
+      
+### User Profile [GET /api/v1/user_profile_bk]
++ Request (application/json)
+    + Headers
+    
+            platform: ios, android, website
+            app_version: 1.0
+            language: en, th
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        {
+            "usertoken": "usjjfsa7asdKsllcalld",
+            "firstname": "John",
+            "lastname":  "Doe",
+            "phonenumber":  "1812234565",
+            "imgurl":  "https://avatarfiles.alphacoders.com/144/144986.jpg",
+            "coin": "1000"
+        }
+
++ Response 401 (application/json)
+
+        {
+            "message": "Register fail"
+        }
+
+      
+        
+### Get User Profile [GET /api/v1/user_profile ]
++ Request (application/json)
+    + Headers
+    
+            platform: ios, android, website
+            app_version: 1.0
+            language: en, th
+            Accept: application/json
+            Authorization: Bearer usjjfsa7asdKsllcalld
+            
++ Response 200 (application/json)
+
+    
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
+                "usertoken": "usjjfsa7asdKsllcalld",
+                "firstname": "John",
+                "lastname": "Doe",
+                "phonenumber": "1812234565",
+                "imgurl": "https://avatarfiles.alphacoders.com/144/144986.jpg",
+                "totalFavorite":"200",
+                "storesId": "bh0001",
+                "storesImg": "https://www.smeeasy.com/wp-content/uploads/2018/11/7-2.png",
+                "coin": "1000"
+            }
+            
++ Response 401 (application/json)
+            
+            {
+                "message":"Request Not Found"
             }
